@@ -47,3 +47,9 @@ def get_object_from_file_append_to_list(file_path):
     f.close()
     return out_list
 
+
+import os
+project_path = os.getcwd()
+
+def get_data_base_path(database_name):
+    return project_path + (r'\databases\%s' % database_name)
