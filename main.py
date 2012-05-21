@@ -3,9 +3,10 @@
 import sys
 sys.path.append(r'.')
 
-from admin.login import run_script
+from process.process import run_script,running
 from admin.create import create_database,create_table
 from admin.drop import drop_database
+
 def test_datebase_function(f):
     database_name = raw_input('please input the name of database> ')
     while not f(database_name):
@@ -19,8 +20,11 @@ def test_create_table():
 def main():
     #run_script()
     #test_datebase_function(create_database)
-    test_create_table()
+    #test_create_table()
+    running()
 
 if __name__ == '__main__':
     main()
+#main()
+
 
