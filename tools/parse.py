@@ -20,8 +20,7 @@ def token_to_string(token):
 def parsing_token_with_create_table_to_rows(token):
     try:
         if token[-2] == ',':
-            print """Your input was wrong ,in create table near .... ,); 
-            the last comma should not input"""
+            print 'The last comma should not input'
             return None
     except:
         print 'Your input was wrong'

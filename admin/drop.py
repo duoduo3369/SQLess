@@ -1,18 +1,15 @@
 
-import os
 import shutil
 from tools.tools import object_in_file_list,get_object_from_file_extend_to_list,write_to_file
+from tools.default_variable import DATABASE_FILE_PATH,DATABASE_PATH
 
-project_path = os.getcwd()
-db_file_path = project_path + r'\databases'
-db_sys_file_path = project_path + r'\system\databases.txt'
 
-def drop_database(database_name,databases_systemfile_path = db_sys_file_path):
+def drop_database(database_name,databases_systemfile_path = DATABASE_FILE_PATH):
     if not object_in_file_list(obj = database_name , file_path = databases_systemfile_path):
         print 'The database had not exists!\nCheck you input'
         return False
     
-    database_path = db_file_path + ( r'\%s' % database_name)
+    database_path = DATABASE_PATH + ( r'\%s' % database_name)
     
     try:
         shutil.rmtree(database_path)

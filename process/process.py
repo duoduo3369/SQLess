@@ -1,79 +1,42 @@
-import sys
-from admin.login import login
 
-def run_script():
-    print 'loading..'
-    len_argv = len(sys.argv)
-    if len_argv == 1:
-        return login()
-    elif len_argv == 2:
-        return login(sys.argv[1])
-    elif len_argv == 3:
-        return login(sys.argv[1],sys.argv[2])
-    else: 
-        print 'user name or password error'
+from admin.login import login_with_infomation,input_login_infomation
+from tools.parse import  string_to_token
+from tools.tools import sql_input
+from admin_choice import admin_choice
+
+
+def run_script(LOGIN_FLAG = False):
+    LOGIN_FLAG, login_times = login_with_infomation(), 1
+    
+    while not LOGIN_FLAG and login_times < 3:
+        print 'Try %s times, you still have %s to login.' % (login_times, 3 - login_times)
+        login_infomation = input_login_infomation()  
+        LOGIN_FLAG = login_with_infomation(login_infomation)
+        if LOGIN_FLAG == True: 
+            return True
+        login_times += 1
+    
+    if login_times >= 3:
+        print 'Sorry, you may forgot your password, please try later.'
+        raw_input('Hint any key to quit.')
         return False
+    else:
+        return True
 
 
-from tools.parse import string_to_token
-
-CURRENT_DB = None
-def running(RUNNING_FLAG = False):
-    RUNNING_FLAG =run_script()
+def running():  
+    RUNNING_FLAG = True
     while RUNNING_FLAG:
-        input_string  = raw_input()
+        input_string  = sql_input()
         input_string = input_string.lower()
-        if input_string == 'quit':
+        token = string_to_token(input_string)
+        if len(token) == 0 :continue
+        
+        if token[0] == 'quit':
             RUNNING_FLAG = False
         else:
-            token = string_to_token(input_string)
             if admin_choice(token):
                 print 'Mission successed!'
             else:
                 print 'Mission failed!'
 
-from admin.create import use_database
-def admin_choice(token):
-    len_token = len(token)
-    if type(token) != type([]) or len_token < 2:
-        print 'Your input was wrong'
-        return False
-
-    admin_type = token[0]
-    
-    # only type 'use database_name'
-    if len_token == 2:
-        if admin_type == 'use':
-            flag = use_database(token[1].lower())
-            if flag is None:
-                return False
-            else:
-                global CURRENT_DB
-                CURRENT_DB = flag             
-                return True
-    elif admin_type == 'create':
-        return admin_create_choice(token)
-    
-    print 'Your input was wrong.'
-    return False
-
-from admin.create import create_database,create_table
-from tools.parse import  parsing_token_with_create_table_to_rows
-
-def admin_create_choice(token):
-    try:
-        choice_type,name = token[1],token[2]
-    except:
-        print 'Your input was wrong, near create ...'
-        return False
-    if choice_type == 'database':
-            return create_database(name)
-    elif choice_type == 'table':
-        rows = parsing_token_with_create_table_to_rows(token)
-        if rows is None:
-            return False
-        else:
-            return create_table(database_name = CURRENT_DB,table_name = name,rows = rows)
-    else:
-        print 'Your input was wrong, near create ...'
-        return False

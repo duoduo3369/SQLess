@@ -3,13 +3,12 @@
 
 import os
 from tools.tools import append_string_to_file,get_data_base_path,write_to_file
-from admin.exist import is_database_exist
+from tools.default_variable import DATABASE_FILE_PATH, TABLES_NAME_FILE,TABLE_INFO_FILE_SUFFIX
+from admin.exist import is_database_exist,is_table_exist
 
-project_path = os.getcwd()
-databases_file_path = project_path + r'\system\databases.txt'
-TABLES_NAME_FILE = 'tables.txt'
 
-def create_database(database_name,sys_databases_file_path = databases_file_path):
+
+def create_database(database_name,databases_file_path = DATABASE_FILE_PATH):
     
     if is_database_exist(database_name) == True:
         print 'The database named %s was already exists!' % (database_name)
@@ -24,7 +23,7 @@ def create_database(database_name,sys_databases_file_path = databases_file_path)
         return False    
     
     write_to_file(string = '',file_path = r'%s\%s' % (new_database_path,TABLES_NAME_FILE))    
-    append_string_to_file(string = database_name + '\n', file_path = sys_databases_file_path)
+    append_string_to_file(string = database_name + '\n', file_path = databases_file_path)
         
     return True
 
@@ -58,12 +57,16 @@ def create_table(database_name,table_name,rows):
         print 'The database named %s was not exists!' % (database_name)
         return False
     
+    if is_table_exist(dbname = database_name,table_name = table_name) == True:
+        print 'The table named %s has already exists!' % (table_name)
+        return False
+    
     if whether_can_new_table_object(table_name,rows) == False:
         print r' Your input was wrong.'
         return False
     
     database_path = get_data_base_path(database_name)
-    table_name_append_suffix = table_name + r'_info.txt'
+    table_name_append_suffix = table_name + TABLE_INFO_FILE_SUFFIX
     table_info = ''
     
     for row in rows:
@@ -74,10 +77,3 @@ def create_table(database_name,table_name,rows):
     print 'Table created successful!'
     return True
 
-def use_database(database_name):
-    if is_database_exist(database_name) == False:
-        print 'The database named %s was not exists!' % (database_name)
-        return None
-    else:
-        print 'database changed!'
-        return database_name

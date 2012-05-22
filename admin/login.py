@@ -2,12 +2,13 @@
 # -*- coding: utf8 -*-
 
 
-import os
+import sys
 from tools.tools import get_object_from_file_append_to_list
+from tools.default_variable import SECRET_FILE_PATH
+from tools.parse import  string_to_token
 
-secret_file_path = os.getcwd() + r'\system\user_secret.txt'
 
-def secret_check(user,secret,secret_file = secret_file_path): 
+def secret_check(user,secret,secret_file = SECRET_FILE_PATH): 
     user = str(user)
     secret = str(secret)   
 
@@ -32,4 +33,22 @@ def login(user = 'root',password = None):
         print 'user name or password error'
         return False
 
-
+def login_with_infomation(info = sys.argv):
+    print 'Loading..'
+    len_info = len(info)
+    if len_info == 1:
+        return login()
+    elif len_info == 2:
+        return login(info[1])
+    elif len_info == 3:
+        return login(info[1],info[2])
+    else: 
+        print 'User name or password error'
+        return False
+ 
+def input_login_infomation():
+    print 'Please input you user name and password:'
+    input_info = raw_input('>')
+    info = ['SQLess']
+    info.extend(string_to_token(input_info))
+    return info

@@ -2,6 +2,16 @@
 # -*- coding: utf8 -*-
 
 
+def sql_input(prompt = '',white_split = ';'):
+    print prompt    
+    s = raw_input()
+    input_string = s
+    while len(s) == 0 or s[-1] not in white_split:
+        print '...  ',
+        s = raw_input()
+        input_string += '%s\n' % s        
+    return input_string
+
 def object_in_file_list(obj,file_path):
     f = open(file_path,'r')
     
@@ -24,7 +34,16 @@ def write_to_file(string,file_path):
     f = open(file_path,'w')    
     f.write(string)
     f.close()
-   
+
+from default_variable import DATABASE_PATH, TABLES_NAME_FILE,TABLE_INFO_FILE_SUFFIX
+
+def get_table_info_txt_path(dbname,tb_name):
+    return r'%s\%s\%s%s' % (DATABASE_PATH, dbname,tb_name,TABLE_INFO_FILE_SUFFIX)
+
+def get_all_table_name_info_txt_path(dbname):   
+    return r'%s\%s\%s' % (DATABASE_PATH, dbname, TABLES_NAME_FILE)
+
+  
 def get_object_from_file_extend_to_list(file_path):
     """ 
         only one object at a line, return a list like [x, y ].
