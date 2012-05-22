@@ -25,13 +25,14 @@ def admin_choice(token):
         return admin_drop_choice(token)
     elif admin_type == 'desc':
         return admin_desc_choice(token)
-    
+    elif admin_type == 'alter':
+        return admin_alter_choice(token)
     print 'Your input was wrong.'
     return False
 
 from admin.create import create_database,create_table
 from tools.parse import  parsing_token_with_create_table_to_rows
-from admin.drop import drop_database
+from admin.drop import drop_database,drop_table
 
 def admin_use_choice(token):
     try:
@@ -56,8 +57,11 @@ def admin_show_choice(token):
         show_databases()
         return True
     elif choice_type == 'tables':
-        show_tables(default_variable.CURRENT_DB)
-        return True
+        tables = show_tables(default_variable.CURRENT_DB)
+        if tables is None:
+            return False
+        else:
+            return True
     else:
         return False
 
@@ -80,6 +84,27 @@ def admin_create_choice(token):
         print 'Your input was wrong, near create ...'
         return False
     
+from admin.alter import add_row_to_table
+def admin_alter_choice(token):
+    print token
+    try:
+        choice_type,name,alter_type = token[1],token[2],token[3]
+    except:
+        print 'Your input was wrong, near alter ...'
+        return False
+    if choice_type == 'table':
+        rows = parsing_token_with_create_table_to_rows(token)
+        print rows
+        if rows is None or rows == []:
+            print 'Your input was wrong, near alter ...'
+            return False
+        else:
+            if alter_type == 'add':
+                return add_row_to_table(database_name = default_variable.CURRENT_DB,table_name = name,rows = rows)
+            else:
+                return False
+            
+    return False
 def admin_drop_choice(token):
     try:
         choice_type,name = token[1],token[2]
@@ -89,8 +114,9 @@ def admin_drop_choice(token):
     
     if choice_type == 'database':
             return drop_database(name)
-    elif choice_type == 'table':
-        return False
+    elif choice_type == 'table':        
+        return drop_table(default_variable.CURRENT_DB,name)
+
     return False
 
 def admin_desc_choice(token):

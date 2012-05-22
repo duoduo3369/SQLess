@@ -1,6 +1,6 @@
 
 RESTRICTION_TUPLE = (None,'primary key','union')
-ROW_TUPLE = ('int','double','text','bolb','varchar','char')
+ROW_TUPLE = ('int','double','text','blob','varchar','char')
 class Base(object):
     def __init__(self,name):
         self.name = name                

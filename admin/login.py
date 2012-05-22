@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-
 import sys
 from tools.tools import get_object_from_file_append_to_list
 from tools.default_variable import SECRET_FILE_PATH

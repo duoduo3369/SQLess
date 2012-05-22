@@ -35,7 +35,13 @@ def write_to_file(string,file_path):
     f.write(string)
     f.close()
 
-from default_variable import DATABASE_PATH, TABLES_NAME_FILE,TABLE_INFO_FILE_SUFFIX
+from default_variable import DATABASE_PATH, TABLES_NAME_FILE,TABLE_INFO_FILE_SUFFIX,TABLE_DATA_FILE_SUFFIX
+
+def get_database_path(database_name):
+    return DATABASE_PATH + ( r'\%s' % database_name)
+
+def get_table_data_file_path(dbname,tb_name):
+    return r'%s\%s\%s%s' % (DATABASE_PATH, dbname,tb_name,TABLE_DATA_FILE_SUFFIX)
 
 def get_table_info_txt_path(dbname,tb_name):
     return r'%s\%s\%s%s' % (DATABASE_PATH, dbname,tb_name,TABLE_INFO_FILE_SUFFIX)

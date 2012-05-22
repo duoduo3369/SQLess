@@ -3,7 +3,8 @@
 
 import os
 from tools.tools import append_string_to_file,get_data_base_path,write_to_file
-from tools.default_variable import DATABASE_FILE_PATH, TABLES_NAME_FILE,TABLE_INFO_FILE_SUFFIX
+from tools.default_variable import DATABASE_FILE_PATH,\
+ TABLES_NAME_FILE,TABLE_INFO_FILE_SUFFIX,TABLE_DATA_FILE_SUFFIX
 from admin.exist import is_database_exist,is_table_exist
 
 
@@ -28,29 +29,7 @@ def create_database(database_name,databases_file_path = DATABASE_FILE_PATH):
     return True
 
 
-from models.tables import Row,Table
-
-def whether_can_new_table_object(table_name,rows):
-    row_list = []
-    for row in rows:
-        if len(row) == 2:
-            r = Row(row[0],row[1])            
-        elif len(row) == 3:
-            r = Row(row[0],row[1],row[2])            
-        else :
-            return False
-        if r.clean_data():
-            row_list.append(r)
-        else:
-            print 'You input near rows was wrong.'
-            return False
-        
-    table = Table(table_name,row_list)
-    if not table.clean_data():
-        print 'You input near table was wrong.'
-        return False
-    
-    return True
+from whether_can_new import whether_can_new_table_object
 
 def create_table(database_name,table_name,rows): 
     if is_database_exist(database_name) == False:
@@ -73,6 +52,8 @@ def create_table(database_name,table_name,rows):
         table_info += '\t'.join(row)
         table_info += '\n'
     write_to_file(string = table_info,file_path = r'%s\%s' % (database_path ,table_name_append_suffix))
+    write_to_file(string = '',file_path = r'%s\%s%s' % (database_path ,table_name,TABLE_DATA_FILE_SUFFIX))
+
     append_string_to_file(string = table_name + '\n', file_path = r'%s\%s' % (database_path,TABLES_NAME_FILE))
     print 'Table created successful!'
     return True
