@@ -1,7 +1,5 @@
 import shlex
 
-
-
 def string_to_token(input_string,whitespace = ';',quotes = '|'):
     input_string = input_string.replace(',',' , ')
     lexer = shlex.shlex(input_string)

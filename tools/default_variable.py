@@ -13,3 +13,6 @@ TABLE_DATA_FILE_SUFFIX = r'.data'
 
 global CURRENT_DB
 CURRENT_DB = None
+
+RESTRICTION_TUPLE = (None,'primary key','union','not null','null')
+ROW_TUPLE = ('int','double','text','blob','varchar','char')

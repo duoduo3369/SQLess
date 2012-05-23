@@ -32,3 +32,12 @@ def is_row_exist(dbname,table_name,row_name):
         except:
             return False
     return False
+
+def is_db_and_tb_both_exist(database_name,table_name):
+    if is_database_exist(database_name) == False:
+        print 'The database named %s was not exists!' % (database_name)
+        return False
+    
+    if is_table_exist(dbname = database_name,table_name = table_name) == False:
+        print 'The table named %s was not exists!' % (table_name)
+        return False

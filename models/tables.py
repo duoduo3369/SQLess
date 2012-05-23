@@ -1,6 +1,6 @@
 
-RESTRICTION_TUPLE = (None,'primary key','union')
-ROW_TUPLE = ('int','double','text','blob','varchar','char')
+from tools.default_variable import RESTRICTION_TUPLE,ROW_TUPLE
+
 class Base(object):
     def __init__(self,name):
         self.name = name                

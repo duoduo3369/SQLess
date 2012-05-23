@@ -73,7 +73,12 @@ def admin_create_choice(token):
         return False
     if choice_type == 'database':
             return create_database(name)
+        
     elif choice_type == 'table':
+        if  default_variable.CURRENT_DB is None:
+            print 'No database select ,please use a database first.'
+            return False
+        
         rows = parsing_token_with_create_table_to_rows(token)
         if rows is None or rows == []:
             #print 'Your input was wrong, near create ...'
@@ -84,7 +89,7 @@ def admin_create_choice(token):
         #print 'Your input was wrong, near create ...'
         return False
     
-from admin.alter import add_row_to_table
+from admin.alter import add_row_to_table,drop_row_from_table,modify_row_from_table
 def admin_alter_choice(token):
     try:
         choice_type,name,alter_type = token[1],token[2],token[3]
@@ -92,17 +97,30 @@ def admin_alter_choice(token):
         #print 'Your input was wrong, near alter ...'
         return False
     if choice_type == 'table':
-        row = parsing_token_with_alter_table_to_row(token)
-        row_name = token[4]
-        #print rows
-        if row is None or row == []:
-            #print 'Your input was wrong, near alter ...'
-            return False
-        else:
-            if alter_type == 'add':
-                    return add_row_to_table(database_name = default_variable.CURRENT_DB,table_name = name,row = row)
-            else:
+        if alter_type == 'drop':
+            
+            try:
+                row_name = token[4]
+            except:
                 return False
+            
+            return drop_row_from_table(database_name = default_variable.CURRENT_DB,table_name = name, row_name = row_name)
+            
+        elif alter_type == 'add':
+            row = parsing_token_with_alter_table_to_row(token)
+            #print rows
+            if row is None or row == []:
+            #print 'Your input was wrong, near alter ...'
+                return False
+            else:
+                return add_row_to_table(database_name = default_variable.CURRENT_DB,table_name = name,row = row)
+        elif alter_type == 'modify':
+            #print 'admin_alter_choice: token',token
+            try:
+                row_name,new_type = token[4], token[5]
+            except:
+                return False
+            return modify_row_from_table(database_name = default_variable.CURRENT_DB, table_name = name,row_name = row_name,new_type = new_type)      
             
     return False
 def admin_drop_choice(token):

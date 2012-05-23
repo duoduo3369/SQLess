@@ -1,6 +1,0 @@
-a	int	
-b	int	
-m	int	
-mm	int	
-d	varchar	
-

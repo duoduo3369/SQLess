@@ -41,10 +41,7 @@ def show_tables(database_name):
     return tables
 
 def desc_table(database_name,table_name):
-    if database_name is None:
-        print 'Not database used, use a database fisrt!'
-        return None
-    
+
     if table_name is None:
         print 'Please input the table you want to check out!'
         return None
