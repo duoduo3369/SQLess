@@ -31,7 +31,11 @@ def create_database(database_name,databases_file_path = DATABASE_FILE_PATH):
 
 from whether_can_new import whether_can_new_table_object
 
-def create_table(database_name,table_name,rows): 
+def create_table(database_name,table_name,rows):
+    if  database_name is None:
+        print 'No database select ,please use a database first.'
+        return False
+    
     if is_database_exist(database_name) == False:
         print 'The database named %s was not exists!' % (database_name)
         return False

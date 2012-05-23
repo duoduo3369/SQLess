@@ -22,6 +22,7 @@ from models.tables import Row,Table
 #    
 #    return True
 def create_new_row_object(row):
+    "is a list like ['a', 'int'] not [['a', 'int']]"
     if len(row) == 2:
         r = Row(row[0],row[1])            
     elif len(row) == 3:

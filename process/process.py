@@ -38,5 +38,6 @@ def running():
             if admin_choice(token):
                 print 'Mission successed!'
             else:
+                print 'Your input was wrong'
                 print 'Mission failed!'
 

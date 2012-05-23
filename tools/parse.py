@@ -14,16 +14,16 @@ def token_to_string(token):
     try:
         return ' '.join(token)
     except:
-        print 'Token is not a list'
+        #print 'Token is not a list'
         return None
 
 def parsing_token_with_create_table_to_rows(token):
     try:
         if token[-2] == ',':
-            print 'The last comma should not input'
+            #print 'The last comma should not input'
             return None
     except:
-        print 'Your input was wrong'
+        #print 'Your input was wrong'
         return None
     
     format_string = token_to_string(token)
@@ -34,14 +34,25 @@ def parsing_token_with_create_table_to_rows(token):
     lexer.quotes = '|'
     format_token = [t for t in lexer]
     #token like ['create', 'table', 'a', '|  a int pk  |', '|  b varchr  |']
-    #return name rows 
+     
     if len(format_token) < 3:
-        print 'Your input was wrong,near create table ( ....'
         return None
     
     row_tokens = format_token[3:]
+    #print 'row token',row_tokens
     rows = []
     for row in row_tokens:
         # row.split() like this ['|', 'a', 'int', 'pk', '|']
         rows.append(row.split()[1:-1])
     return rows
+
+def parsing_token_with_alter_table_to_row(token):
+    rows = parsing_token_with_create_table_to_rows(token)
+    # rows like [[],[b,int]]
+    if rows is not None:
+        # rows[1:] like this [['a', 'int']]
+        try:
+            return rows[1:][0]
+        except:
+            return None
+    return None

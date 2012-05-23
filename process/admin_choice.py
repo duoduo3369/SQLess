@@ -5,7 +5,7 @@ from tools import default_variable #import CURRENT_DB
 def admin_choice(token):
     len_token = len(token)
     if type(token) != type([]) or len_token < 2:
-        print 'Your input was wrong'
+        #print 'Your input was wrong'
         return False
 
     admin_type = token[0]
@@ -27,18 +27,18 @@ def admin_choice(token):
         return admin_desc_choice(token)
     elif admin_type == 'alter':
         return admin_alter_choice(token)
-    print 'Your input was wrong.'
+    #print 'Your input was wrong.'
     return False
 
 from admin.create import create_database,create_table
-from tools.parse import  parsing_token_with_create_table_to_rows
+from tools.parse import  parsing_token_with_create_table_to_rows,parsing_token_with_alter_table_to_row
 from admin.drop import drop_database,drop_table
 
 def admin_use_choice(token):
     try:
         datebase_name = token[1]
     except:
-        print 'Your input was wrong, near use ...'
+        #print 'Your input was wrong, near use ...'
         return False        
     dbname = use_database(datebase_name)
     if dbname is None:
@@ -51,7 +51,7 @@ def admin_show_choice(token):
     try:
         choice_type = token[1]
     except:
-        print 'Your input was wrong, near show ...'
+        #print 'Your input was wrong, near show ...'
         return False
     if choice_type == 'databases':
         show_databases()
@@ -69,38 +69,38 @@ def admin_create_choice(token):
     try:
         choice_type,name = token[1],token[2]
     except:
-        print 'Your input was wrong, near create ...'
+        #print 'Your input was wrong, near create ...'
         return False
     if choice_type == 'database':
             return create_database(name)
     elif choice_type == 'table':
         rows = parsing_token_with_create_table_to_rows(token)
         if rows is None or rows == []:
-            print 'Your input was wrong, near create ...'
+            #print 'Your input was wrong, near create ...'
             return False
         else:
             return create_table(database_name = default_variable.CURRENT_DB,table_name = name,rows = rows)
     else:
-        print 'Your input was wrong, near create ...'
+        #print 'Your input was wrong, near create ...'
         return False
     
 from admin.alter import add_row_to_table
 def admin_alter_choice(token):
-    print token
     try:
         choice_type,name,alter_type = token[1],token[2],token[3]
     except:
-        print 'Your input was wrong, near alter ...'
+        #print 'Your input was wrong, near alter ...'
         return False
     if choice_type == 'table':
-        rows = parsing_token_with_create_table_to_rows(token)
-        print rows
-        if rows is None or rows == []:
-            print 'Your input was wrong, near alter ...'
+        row = parsing_token_with_alter_table_to_row(token)
+        row_name = token[4]
+        #print rows
+        if row is None or row == []:
+            #print 'Your input was wrong, near alter ...'
             return False
         else:
             if alter_type == 'add':
-                return add_row_to_table(database_name = default_variable.CURRENT_DB,table_name = name,rows = rows)
+                    return add_row_to_table(database_name = default_variable.CURRENT_DB,table_name = name,row = row)
             else:
                 return False
             
@@ -109,7 +109,7 @@ def admin_drop_choice(token):
     try:
         choice_type,name = token[1],token[2]
     except:
-        print 'Your input was wrong, near drop ...'
+        #print 'Your input was wrong, near drop ...'
         return False
     
     if choice_type == 'database':
@@ -123,7 +123,7 @@ def admin_desc_choice(token):
     try:
         choice_type,name = token[1],token[2]
     except:
-        print 'Your input was wrong, near desc ...'
+        #print 'Your input was wrong, near desc ...'
         return False
     if choice_type == 'table':
         table_info = desc_table(database_name = default_variable.CURRENT_DB,table_name = name)

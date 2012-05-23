@@ -5,7 +5,7 @@
 def sql_input(prompt = '',white_split = ';'):
     print prompt    
     s = raw_input()
-    input_string = s
+    input_string = '%s\n' % s
     while len(s) == 0 or s[-1] not in white_split:
         print '...  ',
         s = raw_input()
@@ -34,6 +34,16 @@ def write_to_file(string,file_path):
     f = open(file_path,'w')    
     f.write(string)
     f.close()
+
+def delete_blank_line_in_file(file_path):
+    f = open(file_path,'r')
+    info = [line for line in f if line not in '\n ']
+    f.close()
+    string = ''
+    for s in info:
+        string += s
+    write_to_file(string,file_path)
+    
 
 from default_variable import DATABASE_PATH, TABLES_NAME_FILE,TABLE_INFO_FILE_SUFFIX,TABLE_DATA_FILE_SUFFIX
 
