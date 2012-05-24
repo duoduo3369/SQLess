@@ -4,7 +4,10 @@ from tools.parse import  string_to_token
 from tools.tools import sql_input
 from admin_choice import admin_choice
 
-
+def run():
+    if run_script():
+        running()
+        
 def run_script(LOGIN_FLAG = False):
     LOGIN_FLAG, login_times = login_with_infomation(), 1
     

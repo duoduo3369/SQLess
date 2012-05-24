@@ -4,17 +4,9 @@
 import sys
 sys.path.append(r'.')
 
-from process.process import running,run_script
-        
-def run():
-    if run_script():
-        running()
- 
-from test.test import  test_show_tables        
+from process.process import run
 def main():
-    run()
-    
-    
+    run()    
 
 if __name__ == '__main__':
     main()

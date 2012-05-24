@@ -1,22 +1,106 @@
 
+本系统的数据表的存储方式以及不足：
+	不足：使用简单的文件系统：		
+		每一个数据库是一个文件夹
+		每一个数据库里面有一个tables。txt 存放这个数据库里面所有的表名字
+		每一个表（X）对应一个 X_info.txt 存放这张表的信息  
+		每一个表（X）对应一个 X.data存放数据（尚未使用）  
+		所有的数据库名字信息存在/system/databases.txt文件夹下
+	下一次的做法：
+		可能会使用xml	
+
+流程：1、用户登录，尝试登录，成功登录后进行操作，这是process.process包
+	2、登录后进行操作，实际上是针对用户的输入进行不同的操作选择，因此需要对用户的输入进行分析，选择然后操作
+		问题以及处理：
+			用户的输入时字符串，要做到分析就要把一个句子转换为很多的token(单词),这个操作在tools。parse包
+			得到token后在根据不同的单词进行选择，在process.admin_choice中实现
+	3、具体的操作函数实在admin这个包里面实现	
+
+
+特殊文件即文件夹说明：
+	/system/文件夹 是存一些系统配置文件的，
+		usrs_secret.txt存放了用户名和密码的信息
+		databases.txt 存放所有数据库，不管是新建或者是删除数据库，都会更新这个文件夹
+	/databases/文件夹
+		当新建一个数据库（X）的时候
+			./X/文件夹即为新建的数据库
+				自动生成。/X/tables.txt 存放X数据库中所有表的名字
+			当新建一个表（N）的时候				
+				自动生成./X/n_info.txt 存放表n的一些表属性（列名 类型 完整性约束）
+				自动生成。/X/n.data 存放数据
+
+
+所有问价及函数说明：
+
 文件夹
 
 	system文件夹存放一些默认配置
 	
 		databases.txt 存放已有的数据库名字
-		usrs_secret.txt 存放已有的用户名和密码
+		usrs_secret.txt 存放已有的用户名和密码（每行必须两个元素： 用户名 密码）
+		doc.txt 本文件
 
 	databases文件夹 存放真正的数据库
 
 包
 
 	main函数 进行总的流程控制
+	
+	process 流程控制（mvc的v 还有部分c）
+	
+		process.py
+			run_script 控制登陆 限制登陆次数为三次，输出信息提示
+			running 具体的数据库操作流程，对应于用户操作，进行用户输入和输出一些信息提示
+			run 连接run_script和running，只有成功登陆才能进行数据库的操作
+	
+		admin_choice.py
+			将用户的输入，做分词处理后，选择具体的操作，操作在admin包。
+			分级选择：例如用户输入create（use） table （database）。。。
+				一级选择为 create、（use）
+				二级选择为 table、（database）
+			
+			admin_choice 一级选择 
+			admin_XXX_choice 各种二级选择
 
-	tools包 全部都是自己写的函数 
+	tools包 全部都是自己写的函数 （mvc的c）
+		default_variable.py
+			存放一些默认的变量
+			
+			PROJECT_PATH 当前项目路径  /
+			DATABASE_PATH 数据库文件的物理存放位置 /databases
+			DATABASE_FILE_PATH 已有数据库名字有专门的一个文件，/system/databases.txt 它的位置
+			SECRET_FILE_PATH 用户密码文件夹位置 /system/user_secret.txt
+			建立一个X数据库侯 会生成一个tables.txt 记录本数据库中已有的表 /databases/X/tables.txt
+			TABLES_NAME_FILE = 'tables.txt'
+			TABLE_INFO_FILE_SUFFIX = r'_info.txt'
+			TABLE_DATA_FILE_SUFFIX = r'.data'
+			RESTRICTION_TUPLE  完整性约束条件
+			ROW_TUPLE  表里面每一行的类型
+			CURRENT_DB 一个全局变量 因为想要新建表 必须先USE一个数据库，这个数据库就是CURRENT_DB
+		
+		parse。py
+			因为操作输入的时候是以字符串输入的 当要进行具体处理的时候 需要根据具体的关键词进行操作的选择
+			parse就是对字符串进行处理 主要是进行分词（把一个句子分成不同的单词）
+			
+			string_to_token 将一个字符串分成一个 token（单词）的list
+			token_to_string 将一个list变为string（貌似没用到 而且list必须为['dasf','afd','afsd']）这种
+			parsing_token_with_create_table_to_rows 在create table时使用 将得到的token的list进行
+			处理，返回一个可以用作新建Row兑现的list[['a','int'],['b','varchar','null']]
+			parsing_token_with_alter_table_to_row 类似parsing_token_with_create_table_to_rows
+			不过是在alter table时使用  而且返回的是一个row（['a','int']），而不是一个list
+			
 		tools.py
+			有一些操作很常见 因此把他们写成函数放在这个包地下
+			
+			sql_input sql输入时以;结束的 因此写了一个专门的函数
+			object_in_file_list 给一个字符串（obj）判断是否在一个文件里面， 因为用的list存的 所以叫、、list（名字起的很烂）
 			append_string_to_file 是为了在文件末尾追加一个字符串的
 			write_to_file 将一个字符串写到一个文件里面
-			object_in_file_list 给一个字符串（obj）判断是否在一个文件里面 因为用的list存的 所以叫、、list
+			delete_blank_line_in_file 删除文件里面单独一行的'\n'
+			get_database_path 给一个数据库的名字 得到他物理的存储路径
+			get_table_data_file_path 给一个数据库和表的名字 得到这个表_info_txt文件夹物理的存储路径，里面存着这张表的信息
+			get_all_table_name_info_txt_path 得到每个数据库下的tables.txt文件的路径
+			
 			get_object_from_file_expend_to_list 
 				如果一个文件每行只有一个字符串 那么用这个函数 返回的是文件中所有字符串的一个list 
 				格式是这个样子的[ '1','1','23' ]
@@ -24,18 +108,71 @@
 				如果一个文件每行有多个字符串 用这个函数 返回的是文件中所有字符串的一个list
 				格式是这个样子的[ ['1','1'],['23','fa'] ]
 			
-	admin包 是具体的操作
+	admin包 是具体的操作 （mvc的m和c）
 		
 		login.py 登陆有关
 			secret_check 检验用户名密码是否正确
 			login 登陆判断
-			run_script 当做为脚本运行时 用户密码输入方式可能有不同 
-				如 1、不输入用户名 2、仅有用户名 3、用户名密码
-				此函数做相应处理
+			login_with_infomation 带有infomation的登陆，infomation是至用户的输入，infomation可能
+			有用户名、用户名密码、或者更多，需要判断，默认是用命令行登陆时的参数
+			input_login_infomation 当第一次登陆错误时，需要重新登陆，输入用户名密码，使用此函数
 		
-		drop.py drop有关命令
-			drop_database 删除数据库 需要删除文件夹 并且更改 system/databases.txt
+		advance.py
+			扩展的数据库操作函数，为了方便查询
+				use_database 在进行table级别的操作的时候必须先选定一个数据库，（要不然是进行哪一个数据库表的操作？）
+				show_databases 现实现在已有的所有数据库
+				show_tables 现实当前数据库已有的所有表
+				desc_table 使用这个函数，输入想要查看的表的名字，可以显示这张表的信息（列明、列的数据类型，完整性约束）
+			
+		exist。py
+			判断某对象是否存在
+				is_database_exist 判断某数据库是否存在
+				is_table_exist 判断数据库里面某表是否存在
+				is_row_exist 判断表里面某行是否存在
+				is_db_and_tb_both_exist 判断某数据库和某表是否同时存在
 		
-		create.py create有关命令
-			 drop_database 创建数据库 需要创建文件夹 并且更改 system/databases.txt
+		drop.py 
+			drop有关命令
+				drop_database 删除数据库 
+				drop_table 删除表
+				drop_row 删除某行 
+				get_drop_row_string_from_infolist drop_row的一个辅助函数
+		
+		create.py 
+			create有关命令
+				create_database 创建数据库
+				create_table 创建表
+			 
+		alter.py 
+			alter 有关命令	
+				add_row_to_table 在某表中增加一新行
+				drop_row_from_table 在某表中丢弃一行
+				modify_row_from_table 更改某表中某行的类型
+				get_modified_row_string_from_infolist modify_row_from_table的一个辅助函数
+		
+		whether_can_new.py
+			主要看能否生成具体类的对象，只有能后生成类的对象，才能说明之前用户的输入都是正确的
+			create_new_row_object 尝试创建一个Row对象，成功返回新对象，否则返回None
+			whether_can_new_table_object 判断是否可以生成一个Table对象
 
+	models 是具体类的包（mvc的m）
+		
+		tables.py 和数据表有关的类
+		  每一个类都有一个clean_data方法，当新建一个对象之后，如果满足这个对象在现实中的逻辑
+		  （比如：Row的类型必须是ROW_TUPLE（tools.default_variable定义）里面的类型）
+		  则返回真，那么才进行一下的操作
+		  
+			Base是一个基类 
+				属性：名字
+			Row 是table里面每一行的类 
+				属性 ：名字、类型、 完整性约束条件
+			Table 数据表的类
+				属性：rows --> Row对象的一个list
+				
+		  
+
+			
+		
+	test 部分函数简单测试
+		
+		

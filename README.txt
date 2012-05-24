@@ -1,41 +1,26 @@
 
-ÎÄ¼ş¼Ğ
+All the functinã€file structionã€process description you can find in the /system/doc.txt ,
+but only in Chinese, my english levelã€ã€ã€.
 
-	systemÎÄ¼ş¼Ğ´æ·ÅÒ»Ğ©Ä¬ÈÏÅäÖÃ
-	
-		databases.txt ´æ·ÅÒÑÓĞµÄÊı¾İ¿âÃû×Ö
-		usrs_secret.txt ´æ·ÅÒÑÓĞµÄÓÃ»§ÃûºÍÃÜÂë
+How to use it:
 
-	databasesÎÄ¼ş¼Ğ ´æ·ÅÕæÕıµÄÊı¾İ¿â
+Please run main.py with username and password in the commandline,
+like 'python main.py root 123456','main.py root 123456'
+Or just double click the main.py. 
 
-°ü
+The user and password stored in /system/user_secret.txt,default root 123456.
 
-	mainº¯Êı ½øĞĞ×ÜµÄÁ÷³Ì¿ØÖÆ
+The command you may use,not case sensitive.
 
-	tools°ü È«²¿¶¼ÊÇ×Ô¼ºĞ´µÄº¯Êı 
-		tools.py
-			append_string_to_file ÊÇÎªÁËÔÚÎÄ¼şÄ©Î²×·¼ÓÒ»¸ö×Ö·û´®µÄ
-			write_to_file ½«Ò»¸ö×Ö·û´®Ğ´µ½Ò»¸öÎÄ¼şÀïÃæ
-			object_in_file_list ¸øÒ»¸ö×Ö·û´®£¨obj£©ÅĞ¶ÏÊÇ·ñÔÚÒ»¸öÎÄ¼şÀïÃæ ÒòÎªÓÃµÄlist´æµÄ ËùÒÔ½Ğ¡¢¡¢list
-			get_object_from_file_expend_to_list 
-				Èç¹ûÒ»¸öÎÄ¼şÃ¿ĞĞÖ»ÓĞÒ»¸ö×Ö·û´® ÄÇÃ´ÓÃÕâ¸öº¯Êı ·µ»ØµÄÊÇÎÄ¼şÖĞËùÓĞ×Ö·û´®µÄÒ»¸ölist 
-				¸ñÊ½ÊÇÕâ¸öÑù×ÓµÄ[ '1','1','23' ]
-			get_object_from_file_append_to_list 
-				Èç¹ûÒ»¸öÎÄ¼şÃ¿ĞĞÓĞ¶à¸ö×Ö·û´® ÓÃÕâ¸öº¯Êı ·µ»ØµÄÊÇÎÄ¼şÖĞËùÓĞ×Ö·û´®µÄÒ»¸ölist
-				¸ñÊ½ÊÇÕâ¸öÑù×ÓµÄ[ ['1','1'],['23','fa'] ]
-			
-	admin°ü ÊÇ¾ßÌåµÄ²Ù×÷
-		
-		login.py µÇÂ½ÓĞ¹Ø
-			secret_check ¼ìÑéÓÃ»§ÃûÃÜÂëÊÇ·ñÕıÈ·
-			login µÇÂ½ÅĞ¶Ï
-			run_script µ±×öÎª½Å±¾ÔËĞĞÊ± ÓÃ»§ÃÜÂëÊäÈë·½Ê½¿ÉÄÜÓĞ²»Í¬ 
-				Èç 1¡¢²»ÊäÈëÓÃ»§Ãû 2¡¢½öÓĞÓÃ»§Ãû 3¡¢ÓÃ»§ÃûÃÜÂë
-				´Ëº¯Êı×öÏàÓ¦´¦Àí
-		
-		drop.py dropÓĞ¹ØÃüÁî
-			drop_database É¾³ıÊı¾İ¿â ĞèÒªÉ¾³ıÎÄ¼ş¼Ğ ²¢ÇÒ¸ü¸Ä system/databases.txt
-		
-		create.py createÓĞ¹ØÃüÁî
-			 drop_database ´´½¨Êı¾İ¿â ĞèÒª´´½¨ÎÄ¼ş¼Ğ ²¢ÇÒ¸ü¸Ä system/databases.txt
-
+USE dbname
+SHOW DATABASES
+SHOW TABLES (USE db first!)
+DESC TALBE tb_name (USE db first!)
+CREATE TABLE tb_name (); (USE db first!)
+CREATE DATABASE db_name (USE db first!)
+ALTER TABLE tb_name ADD () (USE db first!)
+ALTER TABLE tb_name DROP tb_name (USE db first!)
+ALTER TABLE tb_name MODIFY tb_name new_type (USE db first!)
+DROP DATABASE db_name
+DROP TABLE tb_name (USE db first!)
+QUIT 
